@@ -1,0 +1,46 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>Stock Tracker</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+
+  <ion-item *ngIf="User && User.Account">
+    <ion-label>Accounts</ion-label>
+    <ion-select [(ngModel)]="User.Account" (ionChange)="User.accountChanged()">
+      <ion-option *ngFor="let account of User.Accounts"
+                  [value]="account">{{account.accountNickname}}
+      </ion-option>
+    </ion-select>
+  </ion-item>
+
+  <ion-item *ngIf="User && User.Account && User.Account.WatchList">
+    <ion-label>Watch Lists</ion-label>
+    <ion-select [(ngModel)]="User.Account.WatchList" (ionChange)="User.Account.watchListChanged()">
+      <ion-option *ngFor="let watchList of User.Account.WatchLists"
+                  [value]="watchList">{{watchList.title}}</ion-option>
+    </ion-select>
+  </ion-item>
+
+  <!--<ion-searchbar (ionInput)="getItems($event)"></ion-searchbar>-->
+
+  <ion-list *ngIf="User && User.Account && User.Account.WatchList">
+    <ion-item *ngFor="let watchListSymbol of User.Account.WatchList.Symbols">
+      <div *ngIf="watchListSymbol.Symbol">
+        <h3>
+          <span style="text-transform: uppercase;">{{watchListSymbol.Symbol}}:</span>
+          <span [ngClass]="{positive: watchListSymbol.Change.indexOf('+') > -1, negative: watchListSymbol.Change.indexOf('-') > -1}">
+            {{watchListSymbol.Ask}} {{watchListSymbol.Change}} ({{watchListSymbol.ChangeinPercent}})
+          </span>
+        </h3>
+        <p>
+          Day's Range: {{watchListSymbol.DaysRange}}
+        </p>
+        <p>
+          Previous Close: {{watchListSymbol.PreviousClose}}
+        </p>
+      </div>
+    </ion-item>
+  </ion-list>
+</ion-content>
